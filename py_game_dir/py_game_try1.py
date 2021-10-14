@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 import time
 from pygame import font
 from pygame import color
@@ -74,6 +75,7 @@ class TXT_msg():
 
 class Loop_Watch():
     static_prog_start = time.time()
+    static_framerate_np = np.array([],dtype= np.float32)
     def __init__(self):
         self.start = time.time()
         self.finish = time.time()
@@ -96,7 +98,8 @@ class Loop_Watch():
 
     def prnt_watch(self):
         self.finish_watch()
-        time_stamp = "Last loop : " + str(self.dt)[:6] + "|max dt = " + str(self.max_dt)[:6]
+        self.avg_dt_np()
+        time_stamp = "Last loop : " + str(self.dt)[:6] + "|avg dt = " + str(self.max_dt)[:7]
         self.counter += 1
         return time_stamp
     
@@ -108,6 +111,15 @@ class Loop_Watch():
         txt = "Time from start : " + str(self.time_from_start())[:10]
         return txt
 
+    def avg_dt_np(self):
+        Loop_Watch.static_framerate_np = np.append(Loop_Watch.static_framerate_np, self.dt)
+        tmp = np.shape(Loop_Watch.static_framerate_np)[0]
+        tmp = np.sum(Loop_Watch.static_framerate_np) / tmp
+        if (np.shape(Loop_Watch.static_framerate_np)[0] > 1000):
+            Loop_Watch.static_framerate_np = np.array([],dtype= np.float32)
+        self.avr_dt = tmp
+        print (np.shape(Loop_Watch.static_framerate_np)[0])
+        
 
 
 
@@ -116,7 +128,7 @@ def main():
     block = Bottom_surf()
     drop = Drop_rect()
     time_obj = Loop_Watch()
-    label1 = TXT_msg(msg = "Last loop : 0.0000|max dt = 0.0000")
+    label1 = TXT_msg(msg = "Last loop : 0.0000|max dt = 0.00000")
     label2 = TXT_msg(msg= "Time from start : 000.000")
 
     running = True
@@ -139,6 +151,7 @@ def main():
         time_str = time_obj.prnt_watch()
         label1.prnt_msg(msg = time_str)
         label2.prnt_msg(time_obj.prnt_from_start())
+        time_obj.avg_dt_np()
 
         pygame.display.flip()
 
