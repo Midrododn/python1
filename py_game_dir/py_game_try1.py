@@ -1,3 +1,4 @@
+from os import TMP_MAX
 import pygame
 import numpy as np
 import time
@@ -34,8 +35,9 @@ class Bottom_surf(pygame.sprite.Sprite):
         self.surf.fill(color_dict["white"])
         self.rect = self.surf.get_rect()
 
-    def draw_bot_block(self):
-        screen.blit(self.surf, (0 , self.heigh))        
+    def draw_instance(self):
+        screen.blit(self.surf, (0 , self.heigh))
+        
 
 class Drop_rect(pygame.sprite.Sprite):
     def __init__(self):
@@ -43,19 +45,28 @@ class Drop_rect(pygame.sprite.Sprite):
         self.width = 10
         self.height = 10
         self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((255, 255, 255))
+        self.surf.fill(color_dict["red"])
         self.rect = self.surf.get_rect()
+        self.count = 0
 
-    def draw_drop(self):
-        screen.blit(self.surf, (0, 0))
+    def draw_instance(self):
+        screen.blit(self.surf, self.rect)
 
-    def prnt_ob():
-        print("obj")
+    def update(self, pressed_keyes,S_BOTTOM = 600 - 40) -> None:
+        #if pressed_keyes[K_DOWN]:
+        #    self.rect.move_ip(0, 5)
+        self.rect.move_ip(0, 5)
+        
+        if self.rect.bottom >= S_BOTTOM:
+            self.rect.bottom = S_BOTTOM
+        else:
+            self.count += 1
+            print(self.count)
 
 class TXT_msg():
     static_lines = 0
     def __init__(self, c_dict = color_dict, S_WIDTH = SCREEN_WIDTH,
-     msg = "< it would be length of the line ->"):
+     msg = "> it would be length of the line ->"):
         self.txt_font = pygame.font.Font('freesansbold.ttf', 8)
         TXT_msg.static_lines += 1 
         self.c_dict = c_dict
@@ -65,8 +76,11 @@ class TXT_msg():
         self.push_right = S_WIDTH - self.txt_render.get_width()
         self.lits_position = TXT_msg.static_lines * self.txt_render.get_height()
     
-    def prnt_msg(self, msg = "TEXT TEXT"):
-        self.txt_string = str(msg)
+    def prnt_msg(self, msg = "<TEXT TEXT"):
+        if self.txt_string[0]==">":
+            self.txt_string = str(msg)
+        if msg[0]!= "<":
+            self.txt_string = str(msg)
         self.txt_render = self.txt_font.render(self.txt_string, True, self.c_dict["green"],
          self.c_dict["blue"])
         txt_Rect = self.txt_render.get_rect()
@@ -98,8 +112,8 @@ class Loop_Watch():
 
     def prnt_watch(self):
         self.finish_watch()
-        self.avg_dt_np()
-        time_stamp = "Last loop : " + str(self.dt)[:6] + "|avg dt = " + str(self.max_dt)[:7]
+        self.avr_dt_np()
+        time_stamp = "Last loop : " + str(self.dt)[:6] + "|avr dt = " + str(self.avr_dt)[:7]
         self.counter += 1
         return time_stamp
     
@@ -111,25 +125,31 @@ class Loop_Watch():
         txt = "Time from start : " + str(self.time_from_start())[:10]
         return txt
 
-    def avg_dt_np(self):
+    def avr_dt_np(self):
         Loop_Watch.static_framerate_np = np.append(Loop_Watch.static_framerate_np, self.dt)
         tmp = np.shape(Loop_Watch.static_framerate_np)[0]
         tmp = np.sum(Loop_Watch.static_framerate_np) / tmp
         if (np.shape(Loop_Watch.static_framerate_np)[0] > 1000):
             Loop_Watch.static_framerate_np = np.array([],dtype= np.float32)
         self.avr_dt = tmp
-        print (np.shape(Loop_Watch.static_framerate_np)[0])
-        
-
 
 
 def main():
 
+    # FPS limitation    
+    FPS = 60
+    FramePerSec = pygame.time.Clock()
+
     block = Bottom_surf()
     drop = Drop_rect()
     time_obj = Loop_Watch()
-    label1 = TXT_msg(msg = "Last loop : 0.0000|max dt = 0.00000")
+    label1 = TXT_msg(msg = "Last loop : 0.0000|avr dt = 0.00000")
     label2 = TXT_msg(msg= "Time from start : 000.000")
+    label3 = TXT_msg(msg= "FPS limitation = " +  str(FPS))
+
+    all_sprites = pygame.sprite.Group()
+    all_sprites.add(drop)
+    all_sprites.add(block)
 
     running = True
 
@@ -146,21 +166,31 @@ def main():
 
         screen.fill((0,0,0))
 
-        block.draw_bot_block()
-        drop.draw_drop()
+        drop.update(pressed_keys)
+
+        FramePerSec.tick(FPS)
+
+        for entity in all_sprites:
+            entity.draw_instance()
+
+        # timer -------------------------------------
         time_str = time_obj.prnt_watch()
+        time_obj.avr_dt_np()
         label1.prnt_msg(msg = time_str)
         label2.prnt_msg(time_obj.prnt_from_start())
-        time_obj.avg_dt_np()
+        label3.prnt_msg() 
+        # timer ------------------------------------
+        
 
         pygame.display.flip()
 
-        #pygame.quit()
-
 
 if __name__ == '__main__':
+
     pygame.init()
     pygame.display.set_caption('Obj surf & txt')
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     main()
+
+    pygame.quit()
