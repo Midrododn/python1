@@ -153,12 +153,12 @@ def main():
 
     while running:
         time_obj.start_watch()
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    running = False
-            elif event.type == QUIT:
-                running = False
+        #for event in pygame.event.get():
+        #    if event.type == KEYDOWN:
+        #        if event.key == K_ESCAPE:
+        #            running = False
+        #    elif event.type == QUIT:
+        #        running = False
 
         pressed_keys = pygame.key.get_pressed()
 
@@ -191,4 +191,4 @@ if __name__ == '__main__':
 
     main()
 
-    pygame.quit()
+    #pygame.quit()
