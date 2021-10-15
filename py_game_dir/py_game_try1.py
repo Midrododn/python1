@@ -1,4 +1,5 @@
-from os import TMP_MAX
+# filename : py_game_try1.py
+
 import pygame
 import numpy as np
 import time
@@ -59,9 +60,6 @@ class Drop_rect(pygame.sprite.Sprite):
         
         if self.rect.bottom >= S_BOTTOM:
             self.rect.bottom = S_BOTTOM
-        else:
-            self.count += 1
-            print(self.count)
 
 class TXT_msg():
     static_lines = 0
