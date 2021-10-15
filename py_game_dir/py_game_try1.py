@@ -13,11 +13,15 @@ from pygame.locals import(
     K_RIGHT,
     K_ESCAPE,
     KEYDOWN,
+    K_LCTRL,
+    K_SPACE,
     QUIT,
 )
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+
+GRAVITY = 1 # pixel per frame
 
 color_dict = {
     "white":(255, 255, 255),
@@ -35,6 +39,7 @@ class Bottom_surf(pygame.sprite.Sprite):
         self.surf = pygame.Surface((self.width , 40))
         self.surf.fill(color_dict["white"])
         self.rect = self.surf.get_rect()
+ 
 
     def draw_instance(self):
         screen.blit(self.surf, (0 , self.heigh))
@@ -49,17 +54,37 @@ class Drop_rect(pygame.sprite.Sprite):
         self.surf.fill(color_dict["red"])
         self.rect = self.surf.get_rect()
         self.count = 0
+        self.a = GRAVITY
+        self.v_verct = 0
 
     def draw_instance(self):
         screen.blit(self.surf, self.rect)
 
     def update(self, pressed_keyes,S_BOTTOM = 600 - 40) -> None:
-        #if pressed_keyes[K_DOWN]:
-        #    self.rect.move_ip(0, 5)
-        self.rect.move_ip(0, 5)
+        if pressed_keyes[K_LEFT]:
+            self.rect.move_ip(-5, 0)
+        if pressed_keyes[K_RIGHT]:
+            self.rect.move_ip(5, 0)
+        if pressed_keyes[K_LCTRL]:
+            self.rect.top = 0
+            self.rect.left = 0
+            self.a = 1
+        if pressed_keyes[K_SPACE]:
+            self.v_verct = -15
+
+        self.v_verct += self.a
+        self.rect.move_ip(0, self.v_verct)
         
         if self.rect.bottom >= S_BOTTOM:
             self.rect.bottom = S_BOTTOM
+            self.v_verct = 0
+        if self.rect.left <= 0:
+            self.rect.left = 0
+        if self.rect.right >= SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top <= 0:
+            self.rect.top = 0
+            self.v_verct = 0
 
 class TXT_msg():
     static_lines = 0
@@ -144,6 +169,7 @@ def main():
     label1 = TXT_msg(msg = "Last loop : 0.0000|avr dt = 0.00000")
     label2 = TXT_msg(msg= "Time from start : 000.000")
     label3 = TXT_msg(msg= "FPS limitation = " +  str(FPS))
+    label4 = TXT_msg(msg= "V vertical =        ")
 
     all_sprites = pygame.sprite.Group()
     all_sprites.add(drop)
@@ -153,12 +179,12 @@ def main():
 
     while running:
         time_obj.start_watch()
-        #for event in pygame.event.get():
-        #    if event.type == KEYDOWN:
-        #        if event.key == K_ESCAPE:
-        #            running = False
-        #    elif event.type == QUIT:
-        #        running = False
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+            elif event.type == QUIT:
+                running = False
 
         pressed_keys = pygame.key.get_pressed()
 
@@ -176,7 +202,8 @@ def main():
         time_obj.avr_dt_np()
         label1.prnt_msg(msg = time_str)
         label2.prnt_msg(time_obj.prnt_from_start())
-        label3.prnt_msg() 
+        label3.prnt_msg()
+        label4.prnt_msg(msg = ("V vertical = " + str(drop.v_verct))) 
         # timer ------------------------------------
         
 
