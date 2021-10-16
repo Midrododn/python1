@@ -61,9 +61,9 @@ class PongGame(Widget):
 
     def on_touch_down(self, touch):
         if (touch.x >= self.width - 150):
-            if touch.y <= 100:
+            if touch.y <= (self.height * (1/3)):
                 self.ball.velocity_y = -20
-            elif (touch.y >= self.height - 100):
+            elif (touch.y >= (self.height * (2/3))):
                 self.ball.velocity_y = 20
             elif (self.ball.velocity_x == 0)and(self.ball.x == 10):
                 self.ball.velocity_x = 30
