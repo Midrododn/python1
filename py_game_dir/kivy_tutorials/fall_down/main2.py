@@ -60,15 +60,14 @@ class PongGame(Widget):
         self.ball.move(self.height, self.width)
 
     def on_touch_down(self, touch):
-        if touch.x >= self.width - 50:
-            if self.ball.velocity_x == 0:
+        if (touch.x >= self.width - 150):
+            if touch.y <= 100:
+                self.ball.velocity_y = -20
+            elif (touch.y >= self.height - 100):
+                self.ball.velocity_y = 20
+            elif (self.ball.velocity_x == 0)and(self.ball.x == 10):
                 self.ball.velocity_x = 30
                 self.ball.acc = 1
-        if ((touch.x < self.width - 50) and (touch.x >= self.width - 150)):
-            if (touch.y <= 100):
-                self.ball.velocity_y = -20
-            if (touch.y >= self.height - 100):
-                self.ball.velocity_y = 20
 
 class FfallApp(App):
     def build(self):
