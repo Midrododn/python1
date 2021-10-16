@@ -38,7 +38,7 @@ class FallBall(Widget):
                 self.x = 10
                 self.acc = 0
         # bounce off top
-        if (self.x >= width - 50):
+        if (self.x >= width - 150):
             self.velocity_x *= 0
             self.x = 0
             self.acc = 0
