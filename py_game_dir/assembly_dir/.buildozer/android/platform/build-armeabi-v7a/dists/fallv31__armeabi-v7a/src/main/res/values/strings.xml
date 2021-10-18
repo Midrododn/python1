@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Fallv31</string>
-    <string name="private_version">cee959289f2148b53a405172cf09b94bb24e2f8a</string>
-    <string name="presplash_color">#000000</string>
-    <string name="urlScheme">kivy</string>
-</resources>

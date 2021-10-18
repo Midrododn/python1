@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">SQLite3Test</string>
-    <string name="private_version">e082e72b5930521f5f21e3e936a12cc569f822e0</string>
-    <string name="presplash_color">#000000</string>
-    <string name="urlScheme">kivy</string>
-</resources>

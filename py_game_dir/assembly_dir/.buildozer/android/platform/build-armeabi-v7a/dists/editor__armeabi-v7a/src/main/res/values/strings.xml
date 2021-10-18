@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Editor</string>
-    <string name="private_version">f7907f6e125c01ad6318f8c20bb49872e2606d6e</string>
-    <string name="presplash_color">#000000</string>
-    <string name="urlScheme">kivy</string>
-</resources>

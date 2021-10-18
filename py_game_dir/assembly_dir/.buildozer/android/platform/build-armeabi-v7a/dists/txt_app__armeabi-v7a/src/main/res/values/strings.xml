@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">TXT_APP</string>
-    <string name="private_version">59e37a6e19d2c4c1569ae76793cd3a340bd74b98</string>
-    <string name="presplash_color">#000000</string>
-    <string name="urlScheme">kivy</string>
-</resources>
