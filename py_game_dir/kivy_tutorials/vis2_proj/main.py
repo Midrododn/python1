@@ -16,6 +16,13 @@ from kivy.core.window import Window
 from random import randint
 import numpy as np
 
+fall_clr = (0.5, 0., 0.5)
+
+class DrawBlckRec(Widget):
+    def __init__(self, x = 0, y = 0):
+        self.lon_hig = Rectangle(pos=(self.x, self.y), size=(5, 5))
+
+
 class borders(Widget):
     def __init__(self, ybottom = 0, xright = 0, ytop = 0):
         self.bottomy = ybottom
@@ -63,7 +70,8 @@ class Pong1Ball(Widget):
 class PongGame(Widget):
 
     edges = borders()
-    #print(self.height)
+    #loc_fall_clr = (0.5, 0., 0.5)
+    loc_fall_clr =  fall_clr
 
     ball = BulletTtry1(randint(-7,7),randint(-20,20),"ball")
     ball1 = BulletTtry1(randint(-7,7),randint(-7,7),"2ball")
@@ -77,7 +85,6 @@ class PongGame(Widget):
             with self.canvas:
                 obj.draw_inst()
     def  update(self, dt):
-        #edges = borders(self.height,self.width,self.height)
         l_bord = np.array([self.width,self.height])
         for obj in self.inst_list:
             with self.canvas:
