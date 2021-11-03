@@ -18,22 +18,23 @@ import numpy as np
 
 fall_clr = (0.5, 0., 0.5)
 
-class DrawBlckRec(Widget):
-    def __init__(self, x = 0, y = 0):
-        self.lon_hig = Rectangle(pos=(self.x, self.y), size=(5, 5))
+
+class BigRect(Widget):
+
+    def __init__(self):
+        self.pos_x = 50
+        self.pos_y = 50
+        self.posxy = {0,10}
+        self.size_x = 100
+        self.size_y = 100
+
+    def draw_inst(self, status = "new"):
+        if (status == "new"):
+            pass
+        Color(1.,1.,1.)
+        Rectangle(pos=(self.pos_x, self.pos_y), size=(self.size_x, self.size_y))
 
 
-class borders(Widget):
-    def __init__(self, ybottom = 0, xright = 0, ytop = 0):
-        self.bottomy = ybottom
-        self.rightx = xright
-        self.topy = ytop
-    def grub_args(self, ybottom = 0, xright = 0, ytop = 0):
-        self.bottomy = ybottom
-        self.rightx = xright
-        self.topy = ytop
-    def ifexist(self):
-        print("exists")
 
 class BulletTtry1(Widget):
 
@@ -42,7 +43,7 @@ class BulletTtry1(Widget):
         self.ay = 0
         self.pos_x = 10 + dem_x
         self.pos_y = 100 + dem_y
-        self.rgb_color = (0,0,1.)
+        self.rgb_color = (0.5,0,0.5)
         self.inst_name = iname
 
     def change_acc(self, accx , accy ):
@@ -52,6 +53,11 @@ class BulletTtry1(Widget):
         self.pos_y += self.ay
 
     def draw_inst(self):
+        Color(0.5,0,0.5)
+        Rectangle(pos=(self.pos_x, self.pos_y), size=(5, 5))
+
+    def rubber(self):
+        Color(0.,0.,0.)
         Rectangle(pos=(self.pos_x, self.pos_y), size=(5, 5))
 
     def move_down(self, bord):
@@ -69,25 +75,28 @@ class Pong1Ball(Widget):
 
 class PongGame(Widget):
 
-    edges = borders()
-    #loc_fall_clr = (0.5, 0., 0.5)
+    edges = BigRect()
     loc_fall_clr =  fall_clr
 
-    ball = BulletTtry1(randint(-7,7),randint(-20,20),"ball")
-    ball1 = BulletTtry1(randint(-7,7),randint(-7,7),"2ball")
+    ball = BulletTtry1(randint(-8,16),randint(-7,7),"ball")
+    ball1 = BulletTtry1(randint(8,24),randint(-7,7),"1ball")
+    ball2 = BulletTtry1(randint(16,32),randint(-7,7),"2ball")
 
     inst_list = []
     inst_list.append(ball)
     inst_list.append(ball1)
+    inst_list.append(ball2)
 
     def serve_ball(self):
         for obj in self.inst_list:
             with self.canvas:
                 obj.draw_inst()
     def  update(self, dt):
+        self.edges.draw_inst()
         l_bord = np.array([self.width,self.height])
         for obj in self.inst_list:
             with self.canvas:
+                obj.rubber()
                 obj.move_down(l_bord)
                 obj.draw_inst()
     def dummy_loop(self):
@@ -98,6 +107,7 @@ class FallApp(App):
     def build(self):
         game = PongGame()
         game.serve_ball()
+        game.cear_screen()
         Clock.schedule_interval(game.update, 1.0 / 60.0)
         return game
 

@@ -1,10 +1,4 @@
 #:kivy 1.0.9
-<BulletTtry1>:
-    canvas:
-        Rectangle:
-            pos: self.pos_x, self.pos_y
-            size: self.size
-            background_color: (1, 0, 0)
 
 <PongGame>:
     canvas:
@@ -28,6 +22,9 @@
         Rectangle:
             pos: root.width - 100, root.top - 150
             size:100 , 100
+
         Color:
-            #rgb: 0.5, 0., 0.5
-            rgb: self.loc_fall_clr
+            rgb: 1., 1., 1.
+        Rectangle:
+            pos: 0 , 10
+            size: 100, 100
